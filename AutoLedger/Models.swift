@@ -65,4 +65,8 @@ final class Transaction {
     var amount: Decimal {
         Decimal(amountInFen) / 100
     }
+
+    var amountString: String {
+        String(format: "%.2f", NSDecimalNumber(decimal: amount).doubleValue)
+    }
 }

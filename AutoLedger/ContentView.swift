@@ -1,19 +1,22 @@
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "camera.on.rectangle")
-                .font(.system(size: 56))
-            Text("自动记账")
-                .font(.title)
-                .bold()
-            Text("脚手架已就绪")
-                .foregroundStyle(.secondary)
+        TabView {
+            ConfirmListView()
+                .tabItem {
+                    Label("记账", systemImage: "checkmark.circle")
+                }
+            MonthlySummaryView()
+                .tabItem {
+                    Label("汇总", systemImage: "chart.pie")
+                }
         }
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: [Transaction.self, LedgerCategory.self], inMemory: true)
 }

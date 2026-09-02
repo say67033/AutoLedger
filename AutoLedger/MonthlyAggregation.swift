@@ -8,6 +8,10 @@ struct CategoryTotal: Identifiable {
     var total: Decimal {
         Decimal(totalInFen) / 100
     }
+
+    var totalString: String {
+        String(format: "¥%.2f", NSDecimalNumber(decimal: total).doubleValue)
+    }
 }
 
 struct MonthlySummary {
@@ -17,6 +21,10 @@ struct MonthlySummary {
 
     var total: Decimal {
         Decimal(totalInFen) / 100
+    }
+
+    var totalString: String {
+        String(format: "¥%.2f", NSDecimalNumber(decimal: total).doubleValue)
     }
 }
 

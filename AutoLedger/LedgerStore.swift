@@ -4,6 +4,8 @@ import SwiftData
 final class LedgerStore {
     let container: ModelContainer
 
+    static let shared = LedgerStore()
+
     static let defaultCategories: [(name: String, icon: String, keywords: [String])] = [
         ("餐饮", "fork.knife", ["外卖", "美团", "饿了么", "餐厅", "咖啡", "奶茶", "麦当劳", "肯德基", "小吃"]),
         ("购物", "cart", ["淘宝", "京东", "拼多多", "商城", "购物", "订单", "抖音"]),
@@ -45,6 +47,7 @@ final class LedgerStore {
         date: Date = .now,
         categoryName: String = "未分类",
         sourceImageFileName: String? = nil,
+        isConfirmed: Bool = true,
         note: String? = nil
     ) -> Transaction {
         let tx = Transaction(
@@ -54,7 +57,7 @@ final class LedgerStore {
             date: date,
             categoryName: categoryName,
             sourceImageFileName: sourceImageFileName,
-            isConfirmed: true,
+            isConfirmed: isConfirmed,
             note: note
         )
         container.mainContext.insert(tx)
@@ -65,6 +68,24 @@ final class LedgerStore {
     @MainActor
     func fetchAll() -> [Transaction] {
         let descriptor = FetchDescriptor<Transaction>(
+            sortBy: [SortDescriptor(\.date, order: .reverse)]
+        )
+        return (try? container.mainContext.fetch(descriptor)) ?? []
+    }
+
+    @MainActor
+    func fetchDrafts() -> [Transaction] {
+        let descriptor = FetchDescriptor<Transaction>(
+            predicate: #Predicate { $0.isConfirmed == false },
+            sortBy: [SortDescriptor(\.date, order: .reverse)]
+        )
+        return (try? container.mainContext.fetch(descriptor)) ?? []
+    }
+
+    @MainActor
+    func fetchConfirmed() -> [Transaction] {
+        let descriptor = FetchDescriptor<Transaction>(
+            predicate: #Predicate { $0.isConfirmed == true },
             sortBy: [SortDescriptor(\.date, order: .reverse)]
         )
         return (try? container.mainContext.fetch(descriptor)) ?? []

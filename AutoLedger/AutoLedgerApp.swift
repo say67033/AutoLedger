@@ -6,7 +6,7 @@ struct AutoLedgerApp: App {
     private let store: LedgerStore
 
     init() {
-        store = LedgerStore()
+        store = LedgerStore.shared
         store.seedDefaultCategoriesIfNeeded()
     }
 
