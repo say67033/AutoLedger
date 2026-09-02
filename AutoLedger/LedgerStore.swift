@@ -16,7 +16,7 @@ final class LedgerStore {
     ]
 
     init(inMemory: Bool = false) {
-        let schema = Schema([Transaction.self, Category.self])
+        let schema = Schema([Transaction.self, LedgerCategory.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: inMemory)
         do {
             container = try ModelContainer(for: schema, configurations: [configuration])
@@ -28,10 +28,10 @@ final class LedgerStore {
     @MainActor
     func seedDefaultCategoriesIfNeeded() {
         let context = container.mainContext
-        let existing = (try? context.fetchCount(FetchDescriptor<Category>())) ?? 0
+        let existing = (try? context.fetchCount(FetchDescriptor<LedgerCategory>())) ?? 0
         guard existing == 0 else { return }
         for item in Self.defaultCategories {
-            context.insert(Category(name: item.name, icon: item.icon, keywords: item.keywords))
+            context.insert(LedgerCategory(name: item.name, icon: item.icon, keywords: item.keywords))
         }
         try? context.save()
     }

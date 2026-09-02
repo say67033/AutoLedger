@@ -12,7 +12,7 @@ enum PaymentChannel: String, Codable, CaseIterable {
 }
 
 @Model
-final class Category {
+final class LedgerCategory {
     @Attribute(.unique) var name: String
     var icon: String
     var keywords: [String]

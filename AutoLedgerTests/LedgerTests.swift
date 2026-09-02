@@ -72,11 +72,11 @@ final class LedgerTests: XCTestCase {
         store.seedDefaultCategoriesIfNeeded()
 
         let context = store.container.mainContext
-        let count = try context.fetchCount(FetchDescriptor<Category>())
+        let count = try context.fetchCount(FetchDescriptor<LedgerCategory>())
         XCTAssertEqual(count, LedgerStore.defaultCategories.count)
 
         store.seedDefaultCategoriesIfNeeded()
-        let countAfterSecondSeed = try context.fetchCount(FetchDescriptor<Category>())
+        let countAfterSecondSeed = try context.fetchCount(FetchDescriptor<LedgerCategory>())
         XCTAssertEqual(countAfterSecondSeed, count)
     }
 }
