@@ -24,10 +24,26 @@ targets:
         SWIFT_VERSION: "5.9"
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
+  AutoLedgerTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - AutoLedgerTests
+    dependencies:
+      - target: AutoLedger
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        CODE_SIGN_STYLE: Automatic
 schemes:
   AutoLedger:
     build:
       targets:
         AutoLedger: all
+        AutoLedgerTests: [test]
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - AutoLedgerTests
