@@ -1,0 +1,32 @@
+name: AutoLedger
+options:
+  bundleIdPrefix: com.autoledger
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+targets:
+  AutoLedger:
+    type: application
+    platform: iOS
+    sources:
+      - AutoLedger
+    info:
+      path: AutoLedger/Info.plist
+      properties:
+        CFBundleDisplayName: 自动记账
+        UILaunchScreen: {}
+        NSPhotoLibraryUsageDescription: 需要读取你的截图，用于自动识别账目金额与商家。
+        NSPhotoLibraryAddUsageDescription: 需要保存截图记录，用于账目留档。
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.autoledger.app
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+schemes:
+  AutoLedger:
+    build:
+      targets:
+        AutoLedger: all
+    run:
+      config: Debug
