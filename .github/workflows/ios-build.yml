@@ -1,0 +1,29 @@
+name: iOS Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Project
+        run: xcodegen generate
+
+      - name: Build
+        run: xcodebuild build -project AutoLedger.xcodeproj -scheme AutoLedger -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoLedger-app
+          path: build/Build/Products/Debug-iphoneos/AutoLedger.app
