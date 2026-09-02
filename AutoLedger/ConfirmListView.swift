@@ -9,6 +9,10 @@ struct ConfirmListView: View {
     )
     private var drafts: [Transaction]
 
+    @State private var isScanning = false
+    @State private var showAlert = false
+    @State private var scanMessage = ""
+
     var body: some View {
         NavigationStack {
             Group {
@@ -31,6 +35,41 @@ struct ConfirmListView: View {
                 }
             }
             .navigationTitle("待确认")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        runScan()
+                    } label: {
+                        if isScanning {
+                            ProgressView()
+                        } else {
+                            Label("读取截图", systemImage: "camera.on.rectangle")
+                        }
+                    }
+                    .disabled(isScanning)
+                }
+            }
+            .alert("提示", isPresented: $showAlert) {
+                Button("好", role: .cancel) {}
+            } message: {
+                Text(scanMessage)
+            }
+        }
+    }
+
+    @MainActor
+    private func runScan() {
+        guard !isScanning else { return }
+        isScanning = true
+        Task {
+            do {
+                _ = try await ScreenshotPipeline(store: .shared).processLatestScreenshot()
+                scanMessage = "已读取截图，请核对账目"
+            } catch {
+                scanMessage = "未读取到截图，请先截图再试"
+            }
+            isScanning = false
+            showAlert = true
         }
     }
 }

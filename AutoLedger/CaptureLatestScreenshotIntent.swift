@@ -8,9 +8,15 @@ struct CaptureLatestScreenshotIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        let pipeline = ScreenshotPipeline(store: .shared)
-        _ = try await pipeline.processLatestScreenshot()
-        return .result()
+        let store = LedgerStore.shared
+        store.seedDefaultCategoriesIfNeeded()
+
+        do {
+            let tx = try await ScreenshotPipeline(store: store).processLatestScreenshot()
+            return .result(dialog: IntentDialog("已识别 ¥\(tx.amountString) · \(tx.merchant)，请在「待确认」中核对"))
+        } catch {
+            return .result(dialog: IntentDialog("没有读取到可用的截图，请先截图，再双击背面重试"))
+        }
     }
 }
 
